@@ -54,6 +54,7 @@
             color: #3b82f6;
             margin-bottom: 20px;
             transition: color 0.3s ease;
+            text-align: center; /* Center heading */
         }
 
         h2.dark-mode {
@@ -66,7 +67,7 @@
             color: #4a5568;
             font-weight: 500;
             transition: color 0.3s ease;
-            text-align: left;
+            text-align: left; /* Keep label left-aligned */
         }
 
         label.dark-mode {
@@ -81,6 +82,9 @@
             width: calc(100% - 24px);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
             font-size: 1rem;
+            margin-left: auto; /* Center input */
+            margin-right: auto;
+            display: block;
         }
 
         input[type="text"]:focus {
@@ -110,7 +114,8 @@
             font-size: 1rem;
             width: 100%;
             max-width: 300px;
-            margin: 0 auto;
+            margin: 0 auto; /* Center button */
+            display: block;
         }
 
         button:hover {
@@ -137,9 +142,14 @@
             font-weight: 600;
             color: #68d391;
             transition: color 0.3s ease;
-            text-align: center;
+            text-align: center; /* Center message */
             min-height: 30px;
             opacity: 0;
+            display: flex; /* Use flexbox for alignment */
+            flex-direction: row; /* Horizontal direction for message and symbol */
+            align-items: center; /* Vertically center items */
+            gap: 10px; /* Add some gap between message and symbol */
+            justify-content: center; /* Keep the whole message centered */
         }
 
         #message.dark-mode {
@@ -237,13 +247,40 @@
                 transform: rotate(360deg);
             }
         }
+
+        #backButton {
+            margin-top: 20px; /* Add space above the button */
+            margin-left: auto; /* Center button */
+            margin-right: auto;
+            display: none;
+        }
+
+        .back-symbol {
+            cursor: pointer;
+            font-size: 2rem;
+            color: #3b82f6;
+            transition: color 0.3s ease;
+        }
+
+        .back-symbol:hover {
+            color: #2563eb;
+        }
+
+        .back-symbol.dark-mode {
+            color: #93c5fd;
+        }
+
+        .back-symbol.dark-mode:hover {
+            color: #60a5fa;
+        }
+
     </style>
 </head>
 <body class="">
     <div id="loader" class="">
         <div class="loader-content">
             <div class="spinner"></div>
-            <p>My Love...</p>
+            <p>My Love is loading...</p>
         </div>
     </div>
     <div class="container  ">
@@ -254,8 +291,11 @@
         <button onclick="showMessage()" class="">Click ❤️</button>
     </div>
     <h1 id="message" class=""></h1>
+    <div id="backSymbol" class="back-symbol" style="display:none;">
+        ◀
+    </div>
     <script>
-        const allowedNames = ["Mastan", "Sameera","Sam"];
+        const allowedNames = ["mastan", "Mastan"];
         const messageElement = document.getElementById("message");
         const bodyElement = document.querySelector('body');
         const containerElement = document.querySelector('.container');
@@ -264,6 +304,8 @@
         const buttonElement = document.querySelector('button');
         const labelElement = document.querySelector('label');
         const loader = document.getElementById('loader');
+        const backSymbol = document.getElementById('backSymbol');
+
 
         window.onload = function() {
             //  hide the loader and show the main content 2 seconds after page load
@@ -291,16 +333,19 @@
             setTimeout(() => {
                 loader.classList.add('loader-hidden'); // Hide the loader
                 if (isNameAllowed) {
-                    const personalizedMessage = `<span style="color:magenta;">I</span> <span style="color:blue;">love</span> <span style="color:green;">you</span>, <span style="color:red;">${name}</span> <span class="heart">❤️</span>!`;
-                    messageElement.innerHTML = personalizedMessage;
+                    const personalizedMessage = `<span style="color:magenta;">I</span> <span style="color:blue;">love</span> <span style="color:green;">you</span> <span style="color:red;">${name}</span> <span class="heart">❤️</span>!  I am waiting for your love 😊 </br>`;
+                    messageElement.innerHTML = personalizedMessage + '';
                     messageElement.classList.add('fade-in');
                     headingElement.style.display = 'none'; // Hide the h2
                     containerElement.style.display = 'none';
+                    backSymbol.style.display = 'block';
+
                 } else {
-                    messageElement.textContent = "Sorry, your name is not allowed. Only it allowed my Love";
+                    messageElement.textContent = "Sorry, your name is not allowed. Only it allowed my Lover name ◀";
                     messageElement.classList.remove('fade-in');
                     headingElement.style.display = 'none'; // Hide the h2
                     containerElement.style.display = 'none';
+                    backSymbol.style.display = 'block';
                 }
                 messageElement.style.opacity = 1;
             }, 2000);
@@ -318,6 +363,11 @@
             buttonElement.classList.toggle('dark-mode');
             messageElement.classList.toggle('dark-mode');
             labelElement.classList.toggle('dark-mode');
+             if (bodyElement.classList.contains('dark-mode')) {
+                backSymbol.classList.add('dark-mode');
+             }else{
+                backSymbol.classList.remove('dark-mode');
+             }
         }
 
         const darkModeButton = document.createElement('button');
@@ -353,6 +403,14 @@
           }
         `;
         document.head.appendChild(darkModeButtonStyles);
+
+        backSymbol.addEventListener('click', () => {
+            messageElement.innerHTML = '';
+            messageElement.style.opacity = 0;
+            headingElement.style.display = 'block';
+            containerElement.style.display = 'block';
+            backSymbol.style.display = 'none';
+        });
     </script>
 </body>
 </html>
