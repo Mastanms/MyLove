@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personalized Greeting</title>
+    <title>My Love ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -30,7 +30,20 @@
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
             width: 90%;
             max-width: 400px;
+            /* Initially hidden, will be shown after loader */
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s ease 0.3s, opacity 0.3s ease; /* Delay visibility change */
+            display: none; /* Make it disappear after loading */
         }
+
+        .container.visible {
+            visibility: visible;
+            opacity: 1;
+            transition-delay: 0s; /* Remove delay for visibility */
+            display: block;
+        }
+
 
         .container.dark-mode {
             background-color: #2d3748;
@@ -192,13 +205,11 @@
             align-items: center;
             z-index: 1000;
             transition: opacity 0.3s ease;
-            visibility: hidden; /* Initially hidden */
-            opacity: 0;
         }
 
-        .loader.show {
-            visibility: visible;
-            opacity: 1;
+        .loader-hidden {
+            opacity: 0;
+            visibility: hidden;
         }
 
         .loader-content {
@@ -229,20 +240,20 @@
     </style>
 </head>
 <body class="">
-    <div id="loader" class="loader-hidden">
+    <div id="loader" class="">
         <div class="loader-content">
             <div class="spinner"></div>
             <p>My Love...</p>
         </div>
     </div>
-    <div class="container ">
+    <div class="container  ">
         <h2 class="fade-in">Wellcome My Love <span class="heart">❤️</span></h2>
         <label for="nameInput">Enter your name:</label><br>
         <input type="text" id="nameInput" placeholder="Your Name" aria-label="Enter your name" class="">
         <br><br>
-        <button onclick="showMessage()" class="">Click ❤️</button><br><br>
-        <p id="message" class=""></p>
+        <button onclick="showMessage()" class="">Click ❤️</button>
     </div>
+    <h1 id="message" class=""></h1>
     <script>
         const allowedNames = ["mastan", "Mastan"];
         const messageElement = document.getElementById("message");
@@ -253,6 +264,14 @@
         const buttonElement = document.querySelector('button');
         const labelElement = document.querySelector('label');
         const loader = document.getElementById('loader');
+
+        window.onload = function() {
+            //  hide the loader and show the main content 2 seconds after page load
+            setTimeout(function() {
+                loader.classList.add('loader-hidden');
+                containerElement.classList.add('visible');
+            }, 2000);
+        };
 
         function showMessage() {
             const nameInput = document.getElementById("nameInput");
@@ -267,17 +286,21 @@
             const isNameAllowed = allowedNames.some(allowedName => allowedName.toLowerCase() === name.toLowerCase());
 
             // Show the loader
-            loader.classList.add('show');
+            loader.classList.remove('loader-hidden');
 
             setTimeout(() => {
-                loader.classList.remove('show'); // Hide the loader
+                loader.classList.add('loader-hidden'); // Hide the loader
                 if (isNameAllowed) {
                     const personalizedMessage = `<span style="color:magenta;">I</span> <span style="color:blue;">love</span> <span style="color:green;">you</span>, <span style="color:red;">${name}</span> <span class="heart">❤️</span>!`;
                     messageElement.innerHTML = personalizedMessage;
                     messageElement.classList.add('fade-in');
+                    headingElement.style.display = 'none'; // Hide the h2
+                    containerElement.style.display = 'none';
                 } else {
                     messageElement.textContent = "Sorry, your name is not allowed. Only it allowed my Love";
                     messageElement.classList.remove('fade-in');
+                    headingElement.style.display = 'none'; // Hide the h2
+                    containerElement.style.display = 'none';
                 }
                 messageElement.style.opacity = 1;
             }, 2000);
